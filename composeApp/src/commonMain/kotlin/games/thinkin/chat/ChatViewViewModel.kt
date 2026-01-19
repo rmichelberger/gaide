@@ -2,16 +2,17 @@ package games.thinkin.chat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import games.thinkin.gemini.GeminiSession
 import games.thinkin.gemini.api.Content
 import games.thinkin.gemini.api.FileData
 import games.thinkin.gemini.api.GeminiApi
-import games.thinkin.gemini.GeminiSession
 import games.thinkin.gemini.api.GenerationConfig
 import games.thinkin.gemini.api.Part
 import games.thinkin.gemini.api.Request
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import secrets.Secrets
 
 class ChatViewViewModel(base64: String, byteArray: ByteArray, private val geminiApi: GeminiApi) :
     ViewModel() {
@@ -26,7 +27,6 @@ class ChatViewViewModel(base64: String, byteArray: ByteArray, private val gemini
 //        _state.value = State.Chat(messages = dummyMessages.messages)
 
 
-
         viewModelScope.launch {
 //            getPictureInfo(base64 = base64)
 
@@ -38,7 +38,6 @@ class ChatViewViewModel(base64: String, byteArray: ByteArray, private val gemini
 
 //            getPictureInfo(uri = "https://generativelanguage.googleapis.com/v1beta/files/s9beoj5cr8vr")
         }
-
 
 
     }
@@ -164,7 +163,7 @@ class ChatViewViewModel(base64: String, byteArray: ByteArray, private val gemini
                 contents = contents
             )
 
-            val response = geminiApi.generateContent(request = request, apiKey = "")
+            val response = geminiApi.generateContent(request = request, apiKey = Secrets.API_KEY)
             val responseContents = response.candidates.map { it.content }
             geminiSession =
                 GeminiSession(contents = geminiSession.contents + requestContents + responseContents)

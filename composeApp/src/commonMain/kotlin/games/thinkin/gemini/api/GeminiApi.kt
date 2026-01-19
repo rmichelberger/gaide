@@ -4,13 +4,14 @@ import games.thinkin.gemini.file.GeminiFileUploader
 import games.thinkin.network.Network
 import games.thinkin.network.Url
 import io.ktor.client.call.body
+import secrets.Secrets
 
 class GeminiApi(
     private val network: Network,
     private val geminiFileUploader: GeminiFileUploader = GeminiFileUploader(network = network)
 ) {
     suspend fun uploadFile(byteArray: ByteArray) =
-        geminiFileUploader.uploadFile(byteArray = byteArray, apiKey = "")
+        geminiFileUploader.uploadFile(byteArray = byteArray, apiKey = Secrets.API_KEY)
 
     suspend fun generateContent(
         request: Request,
