@@ -88,7 +88,7 @@ private fun CameraContent(
             modifier = Modifier.fillMaxSize(),
             cameraConfiguration = {
                 setCameraLens(CameraLens.BACK)
-                setFlashMode(FlashMode.OFF)
+                setFlashMode(FlashMode.AUTO)
                 setImageFormat(ImageFormat.JPEG)
                 setDirectory(Directory.PICTURES)
                 setTorchMode(TorchMode.OFF)
@@ -107,8 +107,7 @@ private suspend fun handleImageCapture(
 ) {
     when (val result = cameraController.takePicture()) {
         is ImageCaptureResult.Success -> {
-            val bitmap = result.byteArray//.decodeToImageBitmap()
-            onImageCaptured(bitmap)
+            onImageCaptured(result.byteArray)
         }
 
         is ImageCaptureResult.Error -> {

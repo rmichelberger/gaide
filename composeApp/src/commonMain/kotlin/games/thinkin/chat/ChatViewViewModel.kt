@@ -14,10 +14,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import secrets.Secrets
 
-class ChatViewViewModel(base64: String, byteArray: ByteArray, private val geminiApi: GeminiApi) :
+class ChatViewViewModel(private val geminiApi: GeminiApi) :
     ViewModel() {
 
-    private val _state = MutableStateFlow<State>(value = State.Loading)
+    private val _state = MutableStateFlow<State>(value = State.Loading(text = "Loading"))
     val state = _state.asStateFlow()
 
     private var geminiSession = GeminiSession(contents = emptyList())
@@ -25,21 +25,21 @@ class ChatViewViewModel(base64: String, byteArray: ByteArray, private val gemini
     init {
 //        val dummyMessages = DummyMessages()
 //        _state.value = State.Chat(messages = dummyMessages.messages)
+    }
 
+    fun getPictureInfo(byteArray: ByteArray) {
+        // clear session history
+        geminiSession = GeminiSession(contents = emptyList())
 
+        _state.value = State.Loading(text = "Uploading image. It can take longer.")
         viewModelScope.launch {
-//            getPictureInfo(base64 = base64)
-
+            // upload image
             val fileResponse = uploadFile(byteArray = byteArray)
             fileResponse?.file?.uri?.let { uri ->
-                println(uri)
+                // get picture info
                 getPictureInfo(uri = uri)
             }
-
-//            getPictureInfo(uri = "https://generativelanguage.googleapis.com/v1beta/files/s9beoj5cr8vr")
         }
-
-
     }
 
     private suspend fun uploadFile(byteArray: ByteArray) =
@@ -155,7 +155,7 @@ class ChatViewViewModel(base64: String, byteArray: ByteArray, private val gemini
 //    }
 
     private fun sendRequest(requestContents: List<Content>) {
-        _state.value = State.Loading
+        _state.value = State.Loading(text = "Waiting for AI to answer. It can take longer.")
         viewModelScope.launch {
             val contents = geminiSession.contents + requestContents
             val request = Request(
@@ -186,7 +186,7 @@ class ChatViewViewModel(base64: String, byteArray: ByteArray, private val gemini
     }
 
     sealed class State {
-        object Loading : State()
+        data class Loading(val text: String) : State()
         data class Chat(val messages: List<ChatMessage>) : State()
     }
 }

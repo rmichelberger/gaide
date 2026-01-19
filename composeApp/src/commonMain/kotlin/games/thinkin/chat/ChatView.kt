@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,25 +38,23 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import gaide.composeapp.generated.resources.Res
 import gaide.composeapp.generated.resources.back
 import games.thinkin.CenteredBox
-import games.thinkin.chat.ChatViewViewModel.State.Chat
-import games.thinkin.chat.ChatViewViewModel.State.Loading
+import games.thinkin.chat.ChatViewViewModel.State.*
 import games.thinkin.gemini.api.GeminiApi
 import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatView(base64: String, byteArray: ByteArray, geminiApi: GeminiApi, onBack: () -> Unit) {
+fun ChatView(byteArray: ByteArray, geminiApi: GeminiApi, onBack: () -> Unit) {
     val viewModel = viewModel {
-        ChatViewViewModel(
-            base64 = base64,
-            byteArray = byteArray,
-            geminiApi = geminiApi
-        )
+        ChatViewViewModel(geminiApi = geminiApi)
     }
     val state = viewModel.state.collectAsState().value
 
+    LaunchedEffect(key1 = byteArray) {
+//        viewModel.getPictureInfo(byteArray = byteArray)
+    }
+
     Scaffold(
-//        modifier = Modifier.safeContentPadding(),
         topBar = {
             TopAppBar(
                 title = {},
@@ -71,7 +70,7 @@ fun ChatView(base64: String, byteArray: ByteArray, geminiApi: GeminiApi, onBack:
         },
     ) { innerPadding ->
         when (state) {
-            is Loading -> LoadingView(modifier = Modifier.padding(innerPadding))
+            is Loading -> LoadingView(modifier = Modifier.padding(innerPadding), text = state.text)
             is Chat -> ChatContent(
                 modifier = Modifier.padding(innerPadding),
                 messages = state.messages,
@@ -82,8 +81,8 @@ fun ChatView(base64: String, byteArray: ByteArray, geminiApi: GeminiApi, onBack:
 }
 
 @Composable
-private fun LoadingView(modifier: Modifier = Modifier) {
-    CenteredBox(modifier = modifier.fillMaxSize()) { Text(text = "Loading") }
+private fun LoadingView(modifier: Modifier = Modifier, text: String) {
+    CenteredBox(modifier = modifier.fillMaxSize()) { Text(text = text) }
 }
 
 @Composable
@@ -114,7 +113,6 @@ private fun InputView(
     onTextValueChange: (String) -> Unit,
     keyboardType: KeyboardType = KeyboardType.Unspecified,
 ) {
-//    val state = rememberTextFieldState(initialText = "1231 23 123  w ef asd asdg sa dgf sa df sadf as g asd gsa df asd f  asd fsa df as df")
     val state = rememberTextFieldState()
     val send = {
         onTextValueChange(state.text.toString())
@@ -171,7 +169,6 @@ private fun ChatMessageView(message: ChatMessage) {
 
 @Composable
 private fun TextView(modifier: Modifier = Modifier, texts: List<String>, textAlign: TextAlign) {
-//    val texts = text.split("?", ".", "!")
     Column {
         repeat(texts.size) {
             Text(
@@ -182,27 +179,3 @@ private fun TextView(modifier: Modifier = Modifier, texts: List<String>, textAli
         }
     }
 }
-
-//@Composable
-//private fun ChatContent(
-//    answer: String,
-//    questions: List<String>,
-//    onQuestionSelected: (String) -> Unit
-//) {
-//    Column(
-//        verticalArrangement = Arrangement.spacedBy(8.dp),
-//        modifier = Modifier.fillMaxSize(),
-//        horizontalAlignment = Alignment.CenterHorizontally
-//    ) {
-//        LazyColumn(modifier = Modifier.weight(1f, false)) {
-//            item(answer) {
-//                Text(text = answer)
-//            }
-//        }
-//        repeat(questions.size) {
-//            Button(onClick = { onQuestionSelected(questions[it]) }) {
-//                Text(text = questions[it])
-//            }
-//        }
-//    }
-//}

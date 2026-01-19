@@ -17,7 +17,6 @@ fun App() {
     when (state) {
         is Camera -> CameraView(onImageCaptured = viewModel::onImageCaptured)
         is Picture -> ChatView(
-            base64 = state.base64,
             byteArray = state.byteArray,
             geminiApi = viewModel.geminiApi,
             onBack = viewModel::openCamera
