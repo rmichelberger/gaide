@@ -1,0 +1,9 @@
+package games.thinkin.gemini.api
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class GenerationConfig(
+    val responseMimeType: String,
+    val responseJsonSchema: ResponseJsonSchema
+)
