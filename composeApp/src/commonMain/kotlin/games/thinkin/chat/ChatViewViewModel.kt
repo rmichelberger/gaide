@@ -1,7 +1,12 @@
 package games.thinkin.chat
 
+import androidx.compose.ui.text.intl.Locale
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gaide.composeapp.generated.resources.Res
+import gaide.composeapp.generated.resources.loading_answer_text
+import gaide.composeapp.generated.resources.uploading_image_text
+import games.thinkin.fullLanguageName
 import games.thinkin.gemini.GeminiSession
 import games.thinkin.gemini.api.Content
 import games.thinkin.gemini.api.FileData
@@ -12,26 +17,34 @@ import games.thinkin.gemini.api.Request
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 import secrets.Secrets
 
-class ChatViewViewModel(private val geminiApi: GeminiApi) :
+class ChatViewViewModel(private val geminiApi: GeminiApi, byteArray: ByteArray) :
     ViewModel() {
 
-    private val _state = MutableStateFlow<State>(value = State.Loading(text = "Loading"))
+    private val _state =
+        MutableStateFlow<State>(value = State.Loading(textResource = Res.string.loading_answer_text))
     val state = _state.asStateFlow()
 
     private var geminiSession = GeminiSession(contents = emptyList())
 
     init {
+        viewModelScope.launch {
+            getPictureInfo(byteArray = byteArray)
+        }
+    }
+
+//    init {
 //        val dummyMessages = DummyMessages()
 //        _state.value = State.Chat(messages = dummyMessages.messages)
-    }
+//    }
 
     fun getPictureInfo(byteArray: ByteArray) {
         // clear session history
         geminiSession = GeminiSession(contents = emptyList())
 
-        _state.value = State.Loading(text = "Uploading image. It can take longer.")
+        _state.value = State.Loading(textResource = Res.string.uploading_image_text)
         viewModelScope.launch {
             // upload image
             val fileResponse = uploadFile(byteArray = byteArray)
@@ -39,6 +52,7 @@ class ChatViewViewModel(private val geminiApi: GeminiApi) :
                 // get picture info
                 getPictureInfo(uri = uri)
             }
+//            getPictureInfo(uri = "https://generativelanguage.googleapis.com/v1beta/files/cv1n37cu2w3z")
         }
     }
 
@@ -70,7 +84,7 @@ class ChatViewViewModel(private val geminiApi: GeminiApi) :
                 role = "model",
                 parts = listOf(
                     Part(
-                        text = "You are a guide to a visually impaired person. No intro, only the content. Text must be accessible, it will be read out loud, so don't use any text formatting. You need to explain everything detailed in a way that a blind person can understand it.\nGoal: help to do the shopping.\nTasks:\n1) analyze the picture\n2) explain what you can see on the picture\n3) ask follow up questions related to the content of the picture to help to identify the next step"
+                        text = "You are a guide to a visually impaired person. No intro, only the content. Text must be accessible, it will be read out loud, so don't use any text formatting. You need to explain everything detailed in a way that a blind person can understand it.\nGoal: help to do the shopping.\nTasks:\n1) analyze the picture\n2) explain what you can see on the picture\n3) ask follow up questions related to the content of the picture to help to identify the next step. Keep it short, maximal 1 minute to read. All answers must be in ${Locale.current.fullLanguageName}"
                     )
                 )
             ),
@@ -155,7 +169,7 @@ class ChatViewViewModel(private val geminiApi: GeminiApi) :
 //    }
 
     private fun sendRequest(requestContents: List<Content>) {
-        _state.value = State.Loading(text = "Waiting for AI to answer. It can take longer.")
+        _state.value = State.Loading(textResource = Res.string.loading_answer_text)
         viewModelScope.launch {
             val contents = geminiSession.contents + requestContents
             val request = Request(
@@ -186,7 +200,7 @@ class ChatViewViewModel(private val geminiApi: GeminiApi) :
     }
 
     sealed class State {
-        data class Loading(val text: String) : State()
+        data class Loading(val textResource: StringResource) : State()
         data class Chat(val messages: List<ChatMessage>) : State()
     }
 }

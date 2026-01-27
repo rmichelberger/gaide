@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -34,25 +35,18 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import gaide.composeapp.generated.resources.Res
 import gaide.composeapp.generated.resources.back
 import games.thinkin.CenteredBox
-import games.thinkin.chat.ChatViewViewModel.State.*
-import games.thinkin.gemini.api.GeminiApi
+import games.thinkin.chat.ChatViewViewModel.State.Chat
+import games.thinkin.chat.ChatViewViewModel.State.Loading
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatView(byteArray: ByteArray, geminiApi: GeminiApi, onBack: () -> Unit) {
-    val viewModel = viewModel {
-        ChatViewViewModel(geminiApi = geminiApi)
-    }
+fun ChatView(viewModel: ChatViewViewModel, onBack: () -> Unit) {
     val state = viewModel.state.collectAsState().value
-
-    LaunchedEffect(key1 = byteArray) {
-//        viewModel.getPictureInfo(byteArray = byteArray)
-    }
 
     Scaffold(
         topBar = {
@@ -70,7 +64,11 @@ fun ChatView(byteArray: ByteArray, geminiApi: GeminiApi, onBack: () -> Unit) {
         },
     ) { innerPadding ->
         when (state) {
-            is Loading -> LoadingView(modifier = Modifier.padding(innerPadding), text = state.text)
+            is Loading -> LoadingView(
+                modifier = Modifier.padding(innerPadding),
+                text = stringResource(state.textResource)
+            )
+
             is Chat -> ChatContent(
                 modifier = Modifier.padding(innerPadding),
                 messages = state.messages,
@@ -91,12 +89,19 @@ private fun ChatContent(
     messages: List<ChatMessage>,
     onUserInput: (String) -> Unit
 ) {
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(messages.size) {
+        listState.animateScrollToItem(index = messages.size - 1)
+    }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 8.dp),
         modifier = modifier.fillMaxSize().padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LazyColumn(
+            state = listState,
             modifier = Modifier.weight(weight = 1f, fill = false).fillMaxHeight(),
             verticalArrangement = Arrangement.spacedBy(space = 8.dp)
         ) {

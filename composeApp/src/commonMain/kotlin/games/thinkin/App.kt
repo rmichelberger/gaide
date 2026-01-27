@@ -7,6 +7,7 @@ import games.thinkin.AppViewModel.State.Camera
 import games.thinkin.AppViewModel.State.Picture
 import games.thinkin.camera.CameraView
 import games.thinkin.chat.ChatView
+import games.thinkin.chat.ChatViewViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -17,8 +18,12 @@ fun App() {
     when (state) {
         is Camera -> CameraView(onImageCaptured = viewModel::onImageCaptured)
         is Picture -> ChatView(
-            byteArray = state.byteArray,
-            geminiApi = viewModel.geminiApi,
+            viewModel = viewModel {
+                ChatViewViewModel(
+                    geminiApi = viewModel.geminiApi,
+                    byteArray = state.byteArray
+                )
+            },
             onBack = viewModel::openCamera
         )
     }

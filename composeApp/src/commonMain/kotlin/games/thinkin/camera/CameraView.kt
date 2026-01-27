@@ -23,18 +23,17 @@ import com.kashif.cameraK.permissions.Permissions
 import com.kashif.cameraK.permissions.providePermissions
 import com.kashif.cameraK.result.ImageCaptureResult
 import com.kashif.cameraK.ui.CameraPreview
+import gaide.composeapp.generated.resources.Res
+import gaide.composeapp.generated.resources.capture_image_button_text
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun CameraView(onImageCaptured: (ByteArray) -> Unit) {
     val permissions: Permissions = providePermissions()
     val coroutineScope = rememberCoroutineScope()
 
-    Scaffold(
-        modifier = Modifier
-//        .windowInsetsPadding(WindowInsets.systemBars)
-//            .safeContentPadding()
-    ) {
+    Scaffold {
         val cameraPermissionState = remember { mutableStateOf(permissions.hasCameraPermission()) }
 
         val cameraController = remember { mutableStateOf<CameraController?>(null) }
@@ -60,7 +59,7 @@ fun CameraView(onImageCaptured: (ByteArray) -> Unit) {
                             }
                         },
                     ), contentAlignment = Alignment.Center
-                ) { Text("capture image") }
+                ) { Text(stringResource(Res.string.capture_image_button_text)) }
             }
         }
     }
@@ -91,7 +90,7 @@ private fun CameraContent(
                 setFlashMode(FlashMode.AUTO)
                 setImageFormat(ImageFormat.JPEG)
                 setDirectory(Directory.PICTURES)
-                setTorchMode(TorchMode.OFF)
+                setTorchMode(TorchMode.AUTO)
                 setQualityPrioritization(QualityPrioritization.QUALITY)
             },
             onCameraControllerReady = {

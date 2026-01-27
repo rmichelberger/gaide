@@ -1,0 +1,5 @@
+<resources>
+    <string name="capture_image_button_text">Kép készítése</string>
+    <string name="uploading_image_text">Kép feltöltése. Ez tovább tarthat.</string>
+    <string name="loading_answer_text">Válaszra vár. Ez tovább tarthat.</string>
+</resources>

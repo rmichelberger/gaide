@@ -20,7 +20,7 @@ class AppViewModel : ViewModel() {
             val byteArray = Res.readBytes("files/deo_small.jpeg")
 //            val byteArray = Res.readBytes("files/deo.jpeg")
 //            val base64Img = Base64Encoder.encode(byteArray)
-            _state.value = State.Picture(base64 = "base64Img", byteArray = byteArray)
+            _state.value = State.Picture(byteArray = byteArray)
         }
     }*/
 

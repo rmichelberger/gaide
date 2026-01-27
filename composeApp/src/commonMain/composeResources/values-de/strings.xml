@@ -1,0 +1,5 @@
+<resources>
+    <string name="capture_image_button_text">Bild aufnehmen</string>
+    <string name="uploading_image_text">Bild wird hochgeladen. Es kann länger dauern.</string>
+    <string name="loading_answer_text">Anwtort wird geladen. Es kann länger dauern.</string>
+</resources>
