@@ -3,6 +3,7 @@ package games.thinkin.camera
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.kashif.cameraK.controller.CameraController
 import com.kashif.cameraK.enums.CameraLens
 import com.kashif.cameraK.enums.Directory
@@ -50,7 +52,7 @@ fun CameraView(onImageCaptured: (ByteArray) -> Unit) {
             )
             cameraController.value?.let { controller ->
                 Box(
-                    modifier = Modifier.fillMaxSize().clickable(
+                    modifier = Modifier.fillMaxSize().padding(16.dp).clickable(
                         onClick = {
                             coroutineScope.launch {
                                 handleImageCapture(
@@ -64,7 +66,7 @@ fun CameraView(onImageCaptured: (ByteArray) -> Unit) {
             }
         } else {
             Box(
-                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+                modifier = Modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center
             ) {
                 Text(stringResource(Res.string.enable_camera_permission)) }
         }
