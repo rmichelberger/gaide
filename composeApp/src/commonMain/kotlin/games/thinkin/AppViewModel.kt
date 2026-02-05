@@ -13,17 +13,6 @@ class AppViewModel : ViewModel() {
     private val _state = MutableStateFlow<State>(value = State.Camera)
     val state = _state.asStateFlow()
 
-    /*
-    init {
-        viewModelScope.launch {
-
-            val byteArray = Res.readBytes("files/deo_small.jpeg")
-//            val byteArray = Res.readBytes("files/deo.jpeg")
-//            val base64Img = Base64Encoder.encode(byteArray)
-            _state.value = State.Picture(byteArray = byteArray)
-        }
-    }*/
-
     fun onImageCaptured(byteArray: ByteArray) {
         _state.value = State.Picture(byteArray = byteArray)
     }

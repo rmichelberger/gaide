@@ -25,6 +25,7 @@ import com.kashif.cameraK.result.ImageCaptureResult
 import com.kashif.cameraK.ui.CameraPreview
 import gaide.composeapp.generated.resources.Res
 import gaide.composeapp.generated.resources.capture_image_button_text
+import gaide.composeapp.generated.resources.enable_camera_permission
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
@@ -61,6 +62,11 @@ fun CameraView(onImageCaptured: (ByteArray) -> Unit) {
                     ), contentAlignment = Alignment.Center
                 ) { Text(stringResource(Res.string.capture_image_button_text)) }
             }
+        } else {
+            Box(
+                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+            ) {
+                Text(stringResource(Res.string.enable_camera_permission)) }
         }
     }
 }

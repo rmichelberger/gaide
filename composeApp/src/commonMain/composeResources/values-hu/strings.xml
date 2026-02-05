@@ -2,4 +2,5 @@
     <string name="capture_image_button_text">Kép készítése</string>
     <string name="uploading_image_text">Kép feltöltése. Ez tovább tarthat.</string>
     <string name="loading_answer_text">Válaszra vár. Ez tovább tarthat.</string>
+    <string name="enable_camera_permission">Az alkalmazásnak kamera hozzáférésre van szüksége. Kérlek engedélyezd a Beállításokban.</string>
 </resources>
