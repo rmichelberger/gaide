@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		95D2D7D05336918735BF6294 /* gaide.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = gaide.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		95D2D7D05336918735BF6294 /* ai11y.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ai11y.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -50,7 +50,7 @@
 		06F2D6FBDB8B16F716E5B862 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				95D2D7D05336918735BF6294 /* gaide.app */,
+				95D2D7D05336918735BF6294 /* ai11y.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -87,7 +87,7 @@
 			packageProductDependencies = (
 			);
 			productName = iosApp;
-			productReference = 95D2D7D05336918735BF6294 /* gaide.app */;
+			productReference = 95D2D7D05336918735BF6294 /* ai11y.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -192,6 +192,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
+				PRODUCT_NAME = ai11y;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -346,6 +347,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
+				PRODUCT_NAME = ai11y;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
