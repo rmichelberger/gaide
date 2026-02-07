@@ -11,6 +11,8 @@ plugins {
     alias(libs.plugins.serialization)
 }
 
+// change org.gradle.configuration-cache=false in gradle.properties
+/*
 val kmpExtension = extensions.getByType(KotlinMultiplatformExtension::class.java)
 kmpExtension.targets.configureEach {
     // Iterate through all compilations (main, test, debug, release, etc.)
@@ -81,6 +83,7 @@ kmpExtension.targets.configureEach {
         this.compileTaskProvider.dependsOn(generateSecretsTask)
     }
 }
+*/
 
 kotlin {
     androidTarget {

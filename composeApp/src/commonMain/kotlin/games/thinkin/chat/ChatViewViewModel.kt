@@ -55,7 +55,7 @@ class ChatViewViewModel(private val geminiApi: GeminiApi, byteArray: ByteArray) 
     private fun getPictureInfo(uri: String) {
         val contents = listOf(
             Content(
-                role = "model",
+                role = "user",
                 parts = listOf(
                     Part(
                         text = "You are a guide to a visually impaired person. No intro, only the content. Text must be accessible, it will be read out loud, so don't use any text formatting. You need to explain everything detailed in a way that a blind person can understand it.\nGoal: help to do the shopping.\nTasks:\n1) analyze the picture\n2) explain what you can see on the picture\n3) ask follow up questions related to the content of the picture to help to identify the next step. Keep it short, maximal 1 minute to read. All answers must be in ${Locale.current.fullLanguageName}"
