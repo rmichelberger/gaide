@@ -78,17 +78,43 @@ class ChatViewViewModel(private val geminiApi: GeminiApi, byteArray: ByteArray) 
     private fun sendRequest(requestContents: List<Content>) {
         _state.value = State.Loading(textResource = Res.string.loading_answer_text)
         viewModelScope.launch {
-            val contents = geminiSession.contents + requestContents
-            val request = Request(contents = contents)
+            try {
 
-            val response = geminiApi.generateContent(request = request, apiKey = Secrets.API_KEY)
-            val responseContents = response.candidates.map { it.content }
-            geminiSession =
-                GeminiSession(contents = geminiSession.contents + requestContents + responseContents)
-            // remove the first 2 content (system prompt and picture analysis prompt)
-            val visibleContents = geminiSession.contents.drop(2)
-            _state.value =
-                State.Chat(messages = visibleContents.map { ChatMessage(content = it) })
+                val contents = geminiSession.contents + requestContents
+                val request = Request(contents = contents)
+
+                val response =
+                    geminiApi.generateContent(request = request, apiKey = Secrets.API_KEY)
+                val responseContents =
+                    response.candidates?.let { candidates -> candidates.map { it.content } }
+                        ?: response.error?.message?.let { message ->
+                            listOf(
+                                Content(
+                                    role = "model",
+                                    parts = listOf(Part(text = message))
+                                )
+                            )
+                        }
+
+                responseContents?.let {
+                    geminiSession =
+                        GeminiSession(contents = geminiSession.contents + requestContents + it)
+                }
+            } catch (t: Throwable) {
+                geminiSession =
+                    GeminiSession(
+                        contents = geminiSession.contents + requestContents + Content(
+                            role = "model", parts = listOf(
+                                Part(text = "Error: ${t.message ?: t::class.simpleName}")
+                            )
+                        )
+                    )
+            } finally {
+                // remove the first 2 content (system prompt and picture analysis prompt)
+                val visibleContents = geminiSession.contents.drop(2)
+                _state.value =
+                    State.Chat(messages = visibleContents.map { ChatMessage(content = it) })
+            }
         }
     }
 
