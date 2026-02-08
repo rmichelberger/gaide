@@ -14,14 +14,13 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App() {
     val viewModel = viewModel { AppViewModel() }
-    val state = viewModel.state.collectAsState().value
-    when (state) {
+    when (val state = viewModel.state.collectAsState().value) {
         is Camera -> CameraView(onImageCaptured = viewModel::onImageCaptured)
         is Picture -> ChatView(
+            byteArray = state.byteArray,
             viewModel = viewModel {
                 ChatViewViewModel(
                     geminiApi = viewModel.geminiApi,
-                    byteArray = state.byteArray
                 )
             },
             onBack = viewModel::openCamera

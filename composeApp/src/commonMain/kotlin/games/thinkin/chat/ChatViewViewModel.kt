@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import secrets.Secrets
 
-class ChatViewViewModel(private val geminiApi: GeminiApi, byteArray: ByteArray) :
+class ChatViewViewModel(private val geminiApi: GeminiApi) :
     ViewModel() {
 
     private val _state =
@@ -28,23 +28,23 @@ class ChatViewViewModel(private val geminiApi: GeminiApi, byteArray: ByteArray) 
 
     private var geminiSession = GeminiSession(contents = emptyList())
 
-    init {
-        viewModelScope.launch {
-            getPictureInfo(byteArray = byteArray)
-        }
-    }
+    private var byteArrayHashCode: Int? = null
 
     fun getPictureInfo(byteArray: ByteArray) {
-        // clear session history
-        geminiSession = GeminiSession(contents = emptyList())
+        // if there is a new picture
+        if (byteArrayHashCode != byteArray.hashCode()) {
+            byteArrayHashCode = byteArray.hashCode()
+            // clear session history
+            geminiSession = GeminiSession(contents = emptyList())
 
-        _state.value = State.Loading(textResource = Res.string.uploading_image_text)
-        viewModelScope.launch {
-            // upload image
-            val fileResponse = uploadFile(byteArray = byteArray)
-            fileResponse?.file?.uri?.let { uri ->
-                // get picture info
-                getPictureInfo(uri = uri)
+            _state.value = State.Loading(textResource = Res.string.uploading_image_text)
+            viewModelScope.launch {
+                // upload image
+                val fileResponse = uploadFile(byteArray = byteArray)
+                fileResponse?.file?.uri?.let { uri ->
+                    // get picture info
+                    getPictureInfo(uri = uri)
+                }
             }
         }
     }

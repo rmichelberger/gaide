@@ -45,8 +45,10 @@ import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatView(viewModel: ChatViewViewModel, onBack: () -> Unit) {
+fun ChatView(byteArray: ByteArray, viewModel: ChatViewViewModel, onBack: () -> Unit) {
     val state = viewModel.state.collectAsState().value
+
+    viewModel.getPictureInfo(byteArray = byteArray)
 
     Scaffold(
         topBar = {
